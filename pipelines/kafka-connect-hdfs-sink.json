@@ -12,6 +12,17 @@
     "schema.compatibility": "NONE",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "locale": "en",
-    "timezone": "UTC"
+    "timezone": "UTC",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+    "errors.tolerance": "all",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true"
   }
 }
