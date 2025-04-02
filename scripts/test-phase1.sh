@@ -61,15 +61,16 @@ echo "Checking if Kafka broker is running..."
 if ! docker ps | grep -q kafka-broker; then
     echo "❌ Kafka broker is not running. Checking logs..."
     docker logs kafka-broker
-    echo "Attempting to restart Kafka broker..."
-    docker restart kafka-broker
+    
+    echo "Recreating Kafka broker with simplified configuration..."
+    docker compose -f compose/stage-1-minimal.yaml up -d kafka-broker
     sleep 20
 fi
 
 # Wait for Kafka broker to be ready
 RETRY_COUNT=0
 echo "Waiting for Kafka broker to be ready..."
-until docker exec -i kafka-broker kafka-broker-api-versions --bootstrap-server=localhost:9092 > /dev/null 2>&1; do
+until docker exec -i kafka-broker bash -c "kafka-topics --bootstrap-server=localhost:9092 --list" > /dev/null 2>&1; do
     echo "Waiting for Kafka broker to be ready... (${RETRY_COUNT}/${MAX_RETRIES})"
     RETRY_COUNT=$((RETRY_COUNT+1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
