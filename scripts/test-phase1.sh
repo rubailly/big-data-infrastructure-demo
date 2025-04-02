@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
+# Clean up any existing containers
+echo "Cleaning up any existing containers..."
+docker compose -f compose/stage-1-minimal.yaml down
+
 # Create necessary data directories
 echo "Creating data directories..."
-mkdir -p data/zookeeper/data data/zookeeper/log data/kafka data/mysql/data
+mkdir -p data/kafka data/mysql/data
 
 echo "Starting Phase 1 infrastructure..."
 # Use docker compose (new format) instead of docker-compose
