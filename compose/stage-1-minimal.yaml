@@ -32,13 +32,19 @@ services:
     volumes:
       - ./data/zookeeper/data:/var/lib/zookeeper/data
       - ./data/zookeeper/log:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Kafka broker
   kafka-broker:
     container_name: kafka-broker
     image: confluentinc/cp-kafka:7.3.0
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -50,16 +56,26 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     volumes:
       - ./data/kafka:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   # Kafka Connect with Debezium
   kafka-connect:
     container_name: kafka-connect
     image: debezium/connect:2.1
     depends_on:
-      - kafka-broker
-      - mysql
+      kafka-broker:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     ports:
       - "8083:8083"
     environment:

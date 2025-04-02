@@ -34,7 +34,8 @@ fi
 
 # Wait for Kafka Connect to be ready
 RETRY_COUNT=0
-until docker exec -i kafka-connect curl -s http://localhost:8083/ > /dev/null; do
+echo "Waiting for Kafka Connect to be ready..."
+until docker exec -i kafka-connect curl -s http://localhost:8083/ > /dev/null 2>&1; do
     echo "Waiting for Kafka Connect to be ready... (${RETRY_COUNT}/${MAX_RETRIES})"
     RETRY_COUNT=$((RETRY_COUNT+1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then

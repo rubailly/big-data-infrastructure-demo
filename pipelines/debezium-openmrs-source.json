@@ -20,13 +20,14 @@
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "false",
     "transforms.unwrap.delete.handling.mode": "rewrite",
-    "snapshot.mode": "initial",
-    "snapshot.locking.mode": "minimal",
+    "snapshot.mode": "when_needed",
+    "snapshot.locking.mode": "none",
     "errors.tolerance": "all",
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
     "topic.creation.enable": "true",
     "topic.creation.default.replication.factor": "1",
-    "topic.creation.default.partitions": "1"
+    "topic.creation.default.partitions": "1",
+    "tombstones.on.delete": "false"
   }
 }
