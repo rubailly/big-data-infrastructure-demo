@@ -1,1 +1,36 @@
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Build and dependency directories
+target/
+build/
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs and data files
+*.log
+logs/
+tmp/
+
+# Docker volumes and data
+data/hdfs/
+data/kafka/
+data/zookeeper/
+data/mysql/data/
+data/hive/
+
+# Except the sample data SQL file
+!data/openmrs_sample_dump.sql
+
+# Environment variables
+.env
+.env.*
+
+# Aider tool
 .aider*
