@@ -215,16 +215,50 @@ fi
 
 # Check if data landed in HDFS
 echo "Checking if data landed in HDFS..."
-sleep 10  # Give some extra time for data to be written to HDFS
+sleep 30  # Give more time for data to be written to HDFS
+
+# Insert more test records to trigger flush
+echo "Inserting additional test records to trigger HDFS flush..."
+for i in {1..5}; do
+    docker exec -i mysql mysql -u root -popenmrs << EOF
+USE openmrs;
+INSERT INTO patient (patient_id, gender, birthdate, creator, date_created)
+VALUES (9000$i, 'M', '1990-01-$i', 1, NOW());
+
+INSERT INTO person_name (person_name_id, person_id, given_name, family_name, creator, date_created)
+VALUES (8000$i, 9000$i, 'Test$i', 'User$i', 1, NOW());
+EOF
+    echo "Inserted test record $i"
+    sleep 2
+done
+
+# Wait for data to be flushed to HDFS
+echo "Waiting for data to be flushed to HDFS (30 seconds)..."
+sleep 30
+
+# Check HDFS Sink connector status
+echo "Checking HDFS Sink connector status..."
+docker exec kafka-connect curl -s http://localhost:8083/connectors/hdfs-sink/status
+
+# Force HDFS directory creation if needed
+echo "Ensuring HDFS directories exist..."
+docker exec hadoop-namenode hdfs dfs -mkdir -p /kafka/openmrs.patient /kafka/openmrs.person_name
+docker exec hadoop-namenode hdfs dfs -chmod -R 777 /kafka
 
 echo "HDFS directory listing for patient data:"
 docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.patient/
 
 if docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.patient/ | grep -q ".json"; then
     echo "✅ Patient data successfully written to HDFS!"
+    # Show file contents
+    echo "Sample of patient data in HDFS:"
+    PATIENT_FILE=$(docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.patient/ | grep ".json" | head -1 | awk '{print $8}')
+    docker exec hadoop-namenode hdfs dfs -cat $PATIENT_FILE | head -3
 else
     echo "❌ No patient data found in HDFS. Checking HDFS Sink connector logs..."
     docker logs kafka-connect | grep -i "hdfs-sink" | tail -n 50
+    echo "Checking for connector errors..."
+    docker logs kafka-connect | grep -i "error" | tail -n 20
     echo "This could be due to timing - data might still be buffered in the connector."
     echo "Try checking HDFS again after a few minutes or after more data is inserted."
 fi
@@ -234,9 +268,15 @@ docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.person_name/
 
 if docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.person_name/ | grep -q ".json"; then
     echo "✅ Person_name data successfully written to HDFS!"
+    # Show file contents
+    echo "Sample of person_name data in HDFS:"
+    PERSON_FILE=$(docker exec hadoop-namenode hdfs dfs -ls -R /kafka/openmrs.person_name/ | grep ".json" | head -1 | awk '{print $8}')
+    docker exec hadoop-namenode hdfs dfs -cat $PERSON_FILE | head -3
 else
     echo "❌ No person_name data found in HDFS. Checking HDFS Sink connector logs..."
     docker logs kafka-connect | grep -i "hdfs-sink" | tail -n 50
+    echo "Checking for connector errors..."
+    docker logs kafka-connect | grep -i "error" | tail -n 20
     echo "This could be due to timing - data might still be buffered in the connector."
     echo "Try checking HDFS again after a few minutes or after more data is inserted."
 fi

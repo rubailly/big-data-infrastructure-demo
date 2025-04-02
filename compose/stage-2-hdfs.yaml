@@ -158,7 +158,7 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
       # Add these for better logging
-      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
       # Add these for better connector configuration
       CONNECT_PLUGIN_PATH: /kafka/connect
       CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
@@ -171,3 +171,12 @@ services:
       start_period: 60s
     volumes:
       - ./pipelines:/kafka-connect-configs
+      - ./data/hdfs:/hadoop-data
+    command: >
+      bash -c '
+        echo "Waiting for Kafka Connect to start...";
+        sleep 10;
+        echo "Creating HDFS directories...";
+        hdfs dfs -mkdir -p /kafka/openmrs.patient /kafka/openmrs.person_name || true;
+        hdfs dfs -chmod -R 777 /kafka || true;
+        /docker-entrypoint.sh start'

@@ -5,7 +5,7 @@
     "tasks.max": "1",
     "topics": "dbserver1.openmrs.patient,dbserver1.openmrs.person_name",
     "hdfs.url": "hdfs://hadoop-namenode:9000",
-    "flush.size": "3",
+    "flush.size": "1",
     "hadoop.conf.dir": "/etc/hadoop/conf",
     "format.class": "io.confluent.connect.hdfs.json.JsonFormat",
     "storage.class": "io.confluent.connect.hdfs.storage.HdfsStorage",
@@ -23,6 +23,9 @@
     "value.converter.schemas.enable": "false",
     "errors.tolerance": "all",
     "errors.log.enable": "true",
-    "errors.log.include.messages": "true"
+    "errors.log.include.messages": "true",
+    "rotate.interval.ms": "60000",
+    "path.format": "'year'=YYYY/'month'=MM/'day'=dd",
+    "hive.integration": "false"
   }
 }
