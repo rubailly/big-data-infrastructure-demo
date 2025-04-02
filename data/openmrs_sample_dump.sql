@@ -2,6 +2,9 @@
 -- In a real implementation, this would contain the actual SQL dump of the OpenMRS database
 
 -- Create basic tables for demonstration
+DROP TABLE IF EXISTS person_name;
+DROP TABLE IF EXISTS patient;
+
 CREATE TABLE IF NOT EXISTS patient (
   patient_id INT PRIMARY KEY,
   gender CHAR(1),

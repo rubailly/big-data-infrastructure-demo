@@ -14,10 +14,6 @@
     "database.history.kafka.topic": "schema-changes.openmrs",
     "include.schema.changes": "true",
     "snapshot.mode": "initial",
-    "snapshot.locking.mode": "none",
-    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "key.converter.schemas.enable": "false",
-    "value.converter.schemas.enable": "false"
+    "snapshot.locking.mode": "none"
   }
 }

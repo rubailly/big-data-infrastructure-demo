@@ -99,8 +99,12 @@ echo "✅ Kafka topics service is ready!"
 
 # Register the Debezium connector
 echo "Registering Debezium connector for OpenMRS..."
+# First, copy the connector config to the container
+docker cp ./pipelines/debezium-openmrs-source.json kafka-connect:/tmp/debezium-openmrs-source.json
+
+# Then register using the local file
 CONNECTOR_RESPONSE=$(docker exec kafka-connect curl -s -X POST -H "Content-Type: application/json" \
-  --data @/kafka-connect-configs/debezium-openmrs-source.json \
+  --data @/tmp/debezium-openmrs-source.json \
   http://localhost:8083/connectors)
 
 if echo "$CONNECTOR_RESPONSE" | grep -q "error_code"; then
@@ -109,9 +113,10 @@ if echo "$CONNECTOR_RESPONSE" | grep -q "error_code"; then
     docker logs kafka-connect | tail -n 50
     
     # Try with a different approach - using curl directly with verbose output
-    echo "Trying alternative registration method with verbose output..."
+    echo "Trying alternative registration method..."
+    docker exec kafka-connect bash -c "cat /tmp/debezium-openmrs-source.json"
     docker exec kafka-connect bash -c "curl -v -X POST -H \"Content-Type: application/json\" \
-      --data @/kafka-connect-configs/debezium-openmrs-source.json \
+      --data @/tmp/debezium-openmrs-source.json \
       http://localhost:8083/connectors"
     
     # Check if connector was registered
