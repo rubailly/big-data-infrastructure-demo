@@ -108,15 +108,19 @@ if echo "$CONNECTOR_RESPONSE" | grep -q "error_code"; then
     echo "Checking Kafka Connect logs for more details..."
     docker logs kafka-connect | tail -n 50
     
-    # Try with a different approach - using the register-connector.sh script
-    echo "Trying alternative registration method..."
-    docker exec kafka-connect bash -c "curl -s -X POST -H \"Content-Type: application/json\" \
+    # Try with a different approach - using curl directly with verbose output
+    echo "Trying alternative registration method with verbose output..."
+    docker exec kafka-connect bash -c "curl -v -X POST -H \"Content-Type: application/json\" \
       --data @/kafka-connect-configs/debezium-openmrs-source.json \
       http://localhost:8083/connectors"
     
     # Check if connector was registered
     echo "Checking if connector was registered..."
     docker exec kafka-connect curl -s http://localhost:8083/connectors
+    
+    # Check available connector plugins
+    echo "Available connector plugins:"
+    docker exec kafka-connect curl -s http://localhost:8083/connector-plugins | grep MySqlConnector
     
     # Continue anyway to see if we can get more diagnostic information
     echo "Continuing with the test to gather more information..."

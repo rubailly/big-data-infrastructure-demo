@@ -92,6 +92,9 @@ services:
       # Add these for better logging
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR
+      # Add these for better connector configuration
+      CONNECT_PLUGIN_PATH: /kafka/connect
+      CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
     volumes:
       - ./pipelines:/kafka-connect-configs
     restart: on-failure
