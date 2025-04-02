@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Create necessary data directories
+echo "Creating data directories..."
+mkdir -p data/zookeeper/data data/zookeeper/log data/kafka data/mysql/data
+
 echo "Starting Phase 1 infrastructure..."
 # Use docker compose (new format) instead of docker-compose
 docker compose -f compose/stage-1-minimal.yaml up -d

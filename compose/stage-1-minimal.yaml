@@ -1,4 +1,4 @@
-version: '3'
+# No version specified to use the latest version
 
 services:
   # MySQL with OpenMRS database
@@ -33,7 +33,7 @@ services:
       - ./data/zookeeper/data:/var/lib/zookeeper/data
       - ./data/zookeeper/log:/var/lib/zookeeper/log
     healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
