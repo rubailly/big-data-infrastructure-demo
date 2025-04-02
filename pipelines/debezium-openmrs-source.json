@@ -13,21 +13,13 @@
     "table.include.list": "openmrs.patient,openmrs.person_name",
     "database.history.kafka.bootstrap.servers": "kafka-broker:9092",
     "database.history.kafka.topic": "schema-changes.openmrs",
-    "database.history.kafka.recovery.attempts": "10",
-    "database.history.kafka.recovery.poll.interval.ms": "5000",
     "include.schema.changes": "true",
     "transforms": "unwrap",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "false",
-    "transforms.unwrap.delete.handling.mode": "rewrite",
-    "snapshot.mode": "when_needed",
-    "snapshot.locking.mode": "none",
+    "snapshot.mode": "initial",
+    "snapshot.locking.mode": "minimal",
     "errors.tolerance": "all",
-    "errors.log.enable": "true",
-    "errors.log.include.messages": "true",
-    "topic.creation.enable": "true",
-    "topic.creation.default.replication.factor": "1",
-    "topic.creation.default.partitions": "1",
-    "tombstones.on.delete": "false"
+    "errors.log.enable": "true"
   }
 }
