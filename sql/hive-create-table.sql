@@ -8,7 +8,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS patients (
     date_created: STRING
   >
 )
-ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+ROW FORMAT SERDE 'org.apache.hive.serde2.json.JsonSerDe'
 LOCATION '/kafka/openmrs.patient/';
 
 -- Create external table for person names
@@ -22,5 +22,5 @@ CREATE EXTERNAL TABLE IF NOT EXISTS person_names (
     date_created: STRING
   >
 )
-ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+ROW FORMAT SERDE 'org.apache.hive.serde2.json.JsonSerDe'
 LOCATION '/kafka/openmrs.person_name/';
