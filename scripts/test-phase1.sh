@@ -56,19 +56,45 @@ until docker exec -i kafka-connect curl -s http://localhost:8083/ > /dev/null 2>
 done
 echo "✅ Kafka Connect is ready!"
 
-# Check if Kafka topics are created
-echo "Checking Kafka topics..."
+# Check if Kafka broker is running
+echo "Checking if Kafka broker is running..."
+if ! docker ps | grep -q kafka-broker; then
+    echo "❌ Kafka broker is not running. Checking logs..."
+    docker logs kafka-broker
+    echo "Attempting to restart Kafka broker..."
+    docker restart kafka-broker
+    sleep 20
+fi
+
+# Wait for Kafka broker to be ready
 RETRY_COUNT=0
-until docker exec kafka-broker kafka-topics --bootstrap-server localhost:9092 --list | grep -q "connect_"; do
-    echo "Waiting for Kafka topics to be created... (${RETRY_COUNT}/${MAX_RETRIES})"
+echo "Waiting for Kafka broker to be ready..."
+until docker exec -i kafka-broker kafka-broker-api-versions --bootstrap-server=localhost:9092 > /dev/null 2>&1; do
+    echo "Waiting for Kafka broker to be ready... (${RETRY_COUNT}/${MAX_RETRIES})"
     RETRY_COUNT=$((RETRY_COUNT+1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
-        echo "Error: Kafka topics were not created in time."
+        echo "Error: Kafka broker did not become ready in time."
+        echo "Checking Kafka broker logs:"
+        docker logs kafka-broker
         exit 1
     fi
     sleep 5
 done
-echo "✅ Kafka topics are ready!"
+echo "✅ Kafka broker is ready!"
+
+# Check if Kafka topics are created
+echo "Checking Kafka topics..."
+RETRY_COUNT=0
+until docker exec -i kafka-broker kafka-topics --bootstrap-server localhost:9092 --list > /dev/null 2>&1; do
+    echo "Waiting for Kafka topics service to be ready... (${RETRY_COUNT}/${MAX_RETRIES})"
+    RETRY_COUNT=$((RETRY_COUNT+1))
+    if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+        echo "Error: Kafka topics service was not ready in time."
+        exit 1
+    fi
+    sleep 5
+done
+echo "✅ Kafka topics service is ready!"
 
 # Register the Debezium connector
 echo "Registering Debezium connector for OpenMRS..."
