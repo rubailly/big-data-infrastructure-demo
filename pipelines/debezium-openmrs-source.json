@@ -15,11 +15,19 @@
     "database.history.kafka.bootstrap.servers": "kafka-broker:9092",
     "database.history.kafka.topic": "schema-changes.openmrs",
     "include.schema.changes": "true",
-    "snapshot.mode": "initial",
+    "snapshot.mode": "when_needed",
     "snapshot.locking.mode": "none",
     "database.jdbc.driver": "com.mysql.cj.jdbc.Driver",
     "database.ssl.mode": "disabled",
     "database.connectionTimeZone": "SERVER",
-    "database.allowPublicKeyRetrieval": "true"
+    "database.allowPublicKeyRetrieval": "true",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
   }
 }
