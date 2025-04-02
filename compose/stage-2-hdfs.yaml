@@ -68,7 +68,7 @@ services:
   hadoop-namenode:
     container_name: hadoop-namenode
     build:
-      context: ./docker/hadoop/namenode
+      context: ../docker/hadoop/namenode
     image: hadoop-namenode:latest
     environment:
       - CLUSTER_NAME=hadoop-cluster
@@ -88,7 +88,7 @@ services:
   hadoop-datanode1:
     container_name: hadoop-datanode1
     build:
-      context: ./docker/hadoop/datanode
+      context: ../docker/hadoop/datanode
     image: hadoop-datanode:latest
     depends_on:
       hadoop-namenode:
@@ -108,7 +108,7 @@ services:
   hadoop-datanode2:
     container_name: hadoop-datanode2
     build:
-      context: ./docker/hadoop/datanode
+      context: ../docker/hadoop/datanode
     image: hadoop-datanode:latest
     depends_on:
       hadoop-namenode:
