@@ -4,6 +4,8 @@ FROM bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
 ENV HDFS_CONF_dfs_datanode_data_dir=file:///hadoop/dfs/data
 ENV HDFS_CONF_dfs_permissions=false
 ENV HDFS_CONF_dfs_permissions_enabled=false
+ENV CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
+ENV CORE_CONF_hadoop_http_staticuser_user=root
 
 # Create directories
 RUN mkdir -p /hadoop/dfs/data

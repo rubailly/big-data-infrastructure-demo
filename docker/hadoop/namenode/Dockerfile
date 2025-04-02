@@ -7,6 +7,10 @@ ENV HDFS_CONF_dfs_replication=2
 ENV HDFS_CONF_dfs_permissions=false
 ENV HDFS_CONF_dfs_permissions_enabled=false
 ENV HDFS_CONF_dfs_webhdfs_enabled=true
+ENV CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
+ENV CORE_CONF_hadoop_http_staticuser_user=root
+ENV CORE_CONF_hadoop_proxyuser_hue_hosts=*
+ENV CORE_CONF_hadoop_proxyuser_hue_groups=*
 
 # Create directories
 RUN mkdir -p /hadoop/dfs/name

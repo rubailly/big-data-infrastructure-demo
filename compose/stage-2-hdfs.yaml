@@ -75,12 +75,16 @@ services:
       - "9000:9000"  # HDFS
     volumes:
       - ./data/hdfs/namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
     healthcheck:
       test: ["CMD", "/healthcheck.sh"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - default
 
   # Hadoop DataNode 1
   hadoop-datanode1:
@@ -93,7 +97,6 @@ services:
         condition: service_healthy
     environment:
       - SERVICE_PRECONDITION=hadoop-namenode:9870
-      - CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
     volumes:
       - ./data/hdfs/datanode1:/hadoop/dfs/data
     healthcheck:
@@ -102,6 +105,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - default
 
   # Hadoop DataNode 2
   hadoop-datanode2:
@@ -114,7 +119,6 @@ services:
         condition: service_healthy
     environment:
       - SERVICE_PRECONDITION=hadoop-namenode:9870
-      - CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
     volumes:
       - ./data/hdfs/datanode2:/hadoop/dfs/data
     healthcheck:
@@ -123,6 +127,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    networks:
+      - default
 
   # Kafka Connect with Debezium and HDFS Sink
   kafka-connect:
