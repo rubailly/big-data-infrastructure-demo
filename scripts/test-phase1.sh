@@ -2,7 +2,8 @@
 set -e
 
 echo "Starting Phase 1 infrastructure..."
-docker-compose -f compose/stage-1-minimal.yaml up -d
+# Use docker compose (new format) instead of docker-compose
+docker compose -f compose/stage-1-minimal.yaml up -d
 
 echo "Waiting for services to initialize..."
 echo "This may take a minute or two..."
