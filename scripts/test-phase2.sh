@@ -124,6 +124,10 @@ echo "Registering HDFS Sink connector..."
 # First, copy the connector config to the container
 docker cp ./pipelines/kafka-connect-hdfs-sink.json kafka-connect:/tmp/kafka-connect-hdfs-sink.json
 
+# Check available connector plugins
+echo "Available connector plugins:"
+docker exec kafka-connect curl -s http://localhost:8083/connector-plugins | grep -i HdfsSinkConnector
+
 # Then register using the local file
 CONNECTOR_RESPONSE=$(docker exec kafka-connect curl -s -X POST -H "Content-Type: application/json" \
   --data @/tmp/kafka-connect-hdfs-sink.json \

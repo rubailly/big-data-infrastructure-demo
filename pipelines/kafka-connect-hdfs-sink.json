@@ -26,6 +26,7 @@
     "errors.log.include.messages": "true",
     "rotate.interval.ms": "60000",
     "path.format": "'year'=YYYY/'month'=MM/'day'=dd",
-    "hive.integration": "false"
+    "hive.integration": "false",
+    "hadoop.home": "/opt/hadoop"
   }
 }

@@ -133,7 +133,9 @@ services:
   # Kafka Connect with Debezium and HDFS Sink
   kafka-connect:
     container_name: kafka-connect
-    image: debezium/connect:2.1
+    build:
+      context: ../docker/kafka-connect
+    image: kafka-connect-hdfs:latest
     depends_on:
       kafka-broker:
         condition: service_healthy
@@ -162,6 +164,9 @@ services:
       # Add these for better connector configuration
       CONNECT_PLUGIN_PATH: /kafka/connect
       CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
+      # Add Hadoop configuration
+      HADOOP_CONF_DIR: /etc/hadoop/conf
+      HADOOP_HOME: /opt/hadoop
     restart: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
@@ -172,11 +177,3 @@ services:
     volumes:
       - ./pipelines:/kafka-connect-configs
       - ./data/hdfs:/hadoop-data
-    command: >
-      bash -c '
-        echo "Waiting for Kafka Connect to start...";
-        sleep 10;
-        echo "Creating HDFS directories...";
-        hdfs dfs -mkdir -p /kafka/openmrs.patient /kafka/openmrs.person_name || true;
-        hdfs dfs -chmod -R 777 /kafka || true;
-        /docker-entrypoint.sh start'
