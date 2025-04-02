@@ -1,2 +1,2 @@
 #!/bin/bash
-hdfs dfsadmin -report > /dev/null 2>&1
+nc -z localhost 9864 || exit 1

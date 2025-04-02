@@ -1,6 +1,7 @@
-FROM apache/hadoop:3.3.4
+FROM bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
 
 # Set environment variables
+ENV CLUSTER_NAME=hadoop-cluster
 ENV HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
 ENV HDFS_CONF_dfs_replication=2
 ENV HDFS_CONF_dfs_permissions=false

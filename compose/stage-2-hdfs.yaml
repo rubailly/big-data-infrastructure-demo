@@ -70,8 +70,6 @@ services:
     build:
       context: ../docker/hadoop/namenode
     image: hadoop-namenode:latest
-    environment:
-      - CLUSTER_NAME=hadoop-cluster
     ports:
       - "9870:9870"  # Web UI
       - "9000:9000"  # HDFS
@@ -95,6 +93,7 @@ services:
         condition: service_healthy
     environment:
       - SERVICE_PRECONDITION=hadoop-namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
     volumes:
       - ./data/hdfs/datanode1:/hadoop/dfs/data
     healthcheck:
@@ -115,6 +114,7 @@ services:
         condition: service_healthy
     environment:
       - SERVICE_PRECONDITION=hadoop-namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://hadoop-namenode:9000
     volumes:
       - ./data/hdfs/datanode2:/hadoop/dfs/data
     healthcheck:
