@@ -10,12 +10,18 @@
     "database.server.id": "1",
     "database.server.name": "dbserver1",
     "database.include.list": "openmrs",
+    "table.include.list": "openmrs.patient,openmrs.person_name",
     "database.history.kafka.bootstrap.servers": "kafka-broker:9092",
     "database.history.kafka.topic": "schema-changes.openmrs",
     "include.schema.changes": "true",
     "transforms": "unwrap",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "false",
-    "transforms.unwrap.delete.handling.mode": "rewrite"
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "snapshot.mode": "initial",
+    "snapshot.locking.mode": "minimal",
+    "errors.tolerance": "all",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true"
   }
 }
