@@ -142,6 +142,10 @@ echo "Checking connector status..."
 CONNECTOR_STATUS=$(docker exec kafka-connect curl -s http://localhost:8083/connectors/openmrs-connector/status)
 echo "$CONNECTOR_STATUS"
 
+# Check Kafka Connect logs for more details
+echo "Checking Kafka Connect logs for errors..."
+docker logs kafka-connect | grep -i error | tail -n 20
+
 # Create Kafka topics if they don't exist
 echo "Ensuring Kafka topics exist..."
 docker exec kafka-broker kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic dbserver1.openmrs.patient --partitions 1 --replication-factor 1
