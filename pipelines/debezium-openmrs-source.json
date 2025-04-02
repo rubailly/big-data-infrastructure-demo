@@ -16,6 +16,10 @@
     "database.history.kafka.topic": "schema-changes.openmrs",
     "include.schema.changes": "true",
     "snapshot.mode": "initial",
-    "snapshot.locking.mode": "none"
+    "snapshot.locking.mode": "none",
+    "database.jdbc.driver": "com.mysql.cj.jdbc.Driver",
+    "database.ssl.mode": "disabled",
+    "database.connectionTimeZone": "SERVER",
+    "database.allowPublicKeyRetrieval": "true"
   }
 }
