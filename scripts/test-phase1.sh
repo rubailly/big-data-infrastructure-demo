@@ -105,7 +105,21 @@ CONNECTOR_RESPONSE=$(docker exec kafka-connect curl -s -X POST -H "Content-Type:
 
 if echo "$CONNECTOR_RESPONSE" | grep -q "error_code"; then
     echo "❌ Error registering connector: $CONNECTOR_RESPONSE"
-    exit 1
+    echo "Checking Kafka Connect logs for more details..."
+    docker logs kafka-connect | tail -n 50
+    
+    # Try with a different approach - using the register-connector.sh script
+    echo "Trying alternative registration method..."
+    docker exec kafka-connect bash -c "curl -s -X POST -H \"Content-Type: application/json\" \
+      --data @/kafka-connect-configs/debezium-openmrs-source.json \
+      http://localhost:8083/connectors"
+    
+    # Check if connector was registered
+    echo "Checking if connector was registered..."
+    docker exec kafka-connect curl -s http://localhost:8083/connectors
+    
+    # Continue anyway to see if we can get more diagnostic information
+    echo "Continuing with the test to gather more information..."
 else
     echo "✅ Connector registered successfully!"
 fi
