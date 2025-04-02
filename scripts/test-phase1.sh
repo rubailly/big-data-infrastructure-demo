@@ -22,13 +22,25 @@ until docker exec mysql mysqladmin ping -h localhost -u root -popenmrs --silent;
 done
 echo "✅ MySQL is ready!"
 
+# Check if Kafka Connect container is running
+echo "Checking if Kafka Connect container is running..."
+if ! docker ps | grep -q kafka-connect; then
+    echo "❌ Kafka Connect container is not running. Checking logs..."
+    docker logs kafka-connect
+    echo "Attempting to restart Kafka Connect..."
+    docker restart kafka-connect
+    sleep 10
+fi
+
 # Wait for Kafka Connect to be ready
 RETRY_COUNT=0
-until docker exec kafka-connect curl -s http://localhost:8083/ > /dev/null; do
+until docker exec -i kafka-connect curl -s http://localhost:8083/ > /dev/null; do
     echo "Waiting for Kafka Connect to be ready... (${RETRY_COUNT}/${MAX_RETRIES})"
     RETRY_COUNT=$((RETRY_COUNT+1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
         echo "Error: Kafka Connect did not become ready in time."
+        echo "Checking Kafka Connect logs:"
+        docker logs kafka-connect
         exit 1
     fi
     sleep 5
