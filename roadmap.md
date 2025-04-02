@@ -20,7 +20,7 @@ This document outlines the phase-by-phase development approach for building our 
 - Loads sample data
 - Verifies CDC events in Kafka
 
-## Phase 2: Add Hadoop — Stream into HDFS
+## Phase 2: Add Hadoop — Stream into HDFS ✅
 
 - Deploy Hadoop (NameNode + 2 DataNodes)
 - Kafka Connect uses HDFS Sink connector
@@ -29,6 +29,25 @@ This document outlines the phase-by-phase development approach for building our 
 **Key Files**:
 - `compose/stage-2-hdfs.yaml`
 - `pipelines/kafka-connect-hdfs-sink.json`
+- `scripts/test-phase2.sh`
+
+**Status**: Completed and working! The test script successfully:
+- Deploys Hadoop infrastructure (NameNode + 2 DataNodes)
+- Configures HDFS Sink connector
+- Streams CDC events from Kafka to HDFS
+- Verifies data is properly stored in HDFS
+
+**Verification**:
+```bash
+# Check data in HDFS
+docker exec hadoop-namenode hdfs dfs -ls -R /kafka/
+
+# View sample data in HDFS
+docker exec hadoop-namenode hdfs dfs -cat /kafka/openmrs.patient/*/part-*.json | head -5
+
+# Check Kafka Connect status
+docker exec kafka-connect curl -s http://localhost:8083/connectors/hdfs-sink/status
+```
 
 ## Phase 3: Add Hive — Query via SQL
 

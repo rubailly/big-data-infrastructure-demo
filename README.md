@@ -52,6 +52,50 @@ This script will:
 
 When successful, you'll see CDC events for both patient and person_name tables in Kafka.
 
+### Phase 2: Adding Hadoop HDFS
+
+To extend the pipeline with Hadoop HDFS for data storage:
+
+```bash
+# Run the test script for Phase 2
+chmod +x scripts/test-phase2.sh
+./scripts/test-phase2.sh
+```
+
+This script will:
+1. Deploy a Hadoop cluster with NameNode and 2 DataNodes
+2. Configure the HDFS Sink connector for Kafka Connect
+3. Stream CDC events from Kafka to HDFS
+4. Insert test data and verify it flows through the entire pipeline
+
+#### Verifying Phase 2 Setup
+
+After running the Phase 2 script, you can verify the setup with these commands:
+
+```bash
+# Check data directories in HDFS
+docker exec hadoop-namenode hdfs dfs -ls -R /kafka/
+
+# View sample patient data in HDFS
+docker exec hadoop-namenode hdfs dfs -cat /kafka/openmrs.patient/*/part-*.json | head -5
+
+# View sample person_name data in HDFS
+docker exec hadoop-namenode hdfs dfs -cat /kafka/openmrs.person_name/*/part-*.json | head -5
+
+# Check HDFS Sink connector status
+docker exec kafka-connect curl -s http://localhost:8083/connectors/hdfs-sink/status
+
+# Check HDFS disk usage
+docker exec hadoop-namenode hdfs dfs -du -s -h /kafka/
+```
+
+You can also use the provided utility script to check HDFS:
+
+```bash
+# Check HDFS content
+./scripts/check-hdfs.sh hadoop-namenode /kafka/openmrs.patient
+```
+
 ## Prerequisites
 
 - Docker and Docker Compose

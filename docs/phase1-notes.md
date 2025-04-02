@@ -70,4 +70,4 @@ To verify Phase 1 is working correctly:
 
 ## Next Steps
 
-After successfully implementing Phase 1, proceed to Phase 2 to add Hadoop HDFS for storing the CDC events.
+✅ Phase 1 is complete! Proceed to Phase 2 to add Hadoop HDFS for storing the CDC events.
