@@ -31,7 +31,26 @@ big-data-infrastructure-demo/
 
 ## Getting Started
 
-Follow the phase-by-phase approach in the roadmap.md file to build and understand each component of the infrastructure.
+This project follows a phase-by-phase approach as outlined in the roadmap.md file. Each phase builds on the previous one to create a complete big data infrastructure.
+
+### Phase 1: MySQL + Debezium + Kafka
+
+To run the minimal pipeline with MySQL, Debezium, and Kafka:
+
+```bash
+# Run the test script for Phase 1
+chmod +x scripts/test-phase1.sh
+./scripts/test-phase1.sh
+```
+
+This script will:
+1. Start the necessary containers (MySQL, Zookeeper, Kafka, Kafka Connect)
+2. Configure Debezium to monitor the MySQL database
+3. Load sample data into the OpenMRS database
+4. Insert a test patient record
+5. Verify that CDC events are captured in Kafka
+
+When successful, you'll see CDC events for both patient and person_name tables in Kafka.
 
 ## Prerequisites
 
