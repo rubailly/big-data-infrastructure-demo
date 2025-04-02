@@ -1,0 +1,21 @@
+{
+  "name": "openmrs-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "root",
+    "database.password": "openmrs",
+    "database.server.id": "1",
+    "database.server.name": "dbserver1",
+    "database.include.list": "openmrs",
+    "database.history.kafka.bootstrap.servers": "kafka-broker:9092",
+    "database.history.kafka.topic": "schema-changes.openmrs",
+    "include.schema.changes": "true",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false",
+    "transforms.unwrap.delete.handling.mode": "rewrite"
+  }
+}
