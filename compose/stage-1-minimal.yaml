@@ -74,3 +74,9 @@ services:
       VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
     volumes:
       - ./pipelines:/kafka-connect-configs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

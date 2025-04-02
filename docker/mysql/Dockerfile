@@ -11,6 +11,10 @@ RUN echo "[mysqld]" >> /etc/mysql/conf.d/mysql.cnf && \
     echo "binlog_row_image=FULL" >> /etc/mysql/conf.d/mysql.cnf && \
     echo "expire_logs_days=10" >> /etc/mysql/conf.d/mysql.cnf
 
+# Add initialization script
+COPY init-openmrs.sh /docker-entrypoint-initdb.d/
+RUN chmod +x /docker-entrypoint-initdb.d/init-openmrs.sh
+
 # Health check script
 COPY healthcheck.sh /healthcheck.sh
 RUN chmod +x /healthcheck.sh
