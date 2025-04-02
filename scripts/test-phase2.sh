@@ -223,10 +223,10 @@ for i in {1..5}; do
     docker exec -i mysql mysql -u root -popenmrs << EOF
 USE openmrs;
 INSERT INTO patient (patient_id, gender, birthdate, creator, date_created)
-VALUES (9000$i, 'M', '1990-01-$i', 1, NOW());
+VALUES (9100$i, 'M', '1990-01-$i', 1, NOW());
 
 INSERT INTO person_name (person_name_id, person_id, given_name, family_name, creator, date_created)
-VALUES (8000$i, 9000$i, 'Test$i', 'User$i', 1, NOW());
+VALUES (8100$i, 9100$i, 'Test$i', 'User$i', 1, NOW());
 EOF
     echo "Inserted test record $i"
     sleep 2
